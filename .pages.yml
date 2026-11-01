@@ -76,11 +76,16 @@ content:
       - name: video
         label: Vídeo YouTube / MP4
       - name: audio
-        label: Áudio MP3 / M4A / WAV
+        label: Áudio (SoundCloud, MP3, M4A, WAV)
   - name: url
-    label: Link do YouTube ou do arquivo na Internet (HTTPS)
+    label: Link do YouTube, SoundCloud ou arquivo online (HTTPS)
     type: string
     required: false
+  - name: soundcloudEmbed
+    label: Código de incorporação do SoundCloud (iframe)
+    type: text
+    required: false
+    description: No SoundCloud, clique Compartilhar > Incorporar e cole o código completo aqui. O site usa apenas o endereço do player. Este campo tem prioridade sobre o Link e o arquivo enviado.
   - name: audioFile
     label: Ou selecione um áudio enviado
     type: file
