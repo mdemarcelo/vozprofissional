@@ -1,12 +1,10 @@
 {
-  "title": "Amostra de audiolivro 06 — editar título",
+  "title": "Harry Potter - Audiolivro",
   "category": "audiolivros",
   "type": "audio",
-  "url": "",
-  "audioFile": "",
-  "cover": "",
+  "audioFile": "/media/audios/sem-titulo1.wav",
   "description": "Cole aqui o link público da faixa no SoundCloud e ative Mostrar no site.",
   "order": 55,
-  "featured": false,
-  "published": false
+  "featured": true,
+  "published": true
 }
