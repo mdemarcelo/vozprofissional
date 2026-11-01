@@ -1,12 +1,10 @@
 {
-  "title": "Amostra de audiolivro 02 — editar título",
+  "title": "A Verdadeira Historia da Fição Científica",
   "category": "audiolivros",
   "type": "audio",
-  "url": "",
-  "audioFile": "",
-  "cover": "",
+  "url": "https://on.soundcloud.com/QFVXQVbT4kHXyypJ1o",
   "description": "Cole aqui o link público da faixa no SoundCloud e ative Mostrar no site.",
   "order": 51,
   "featured": false,
-  "published": false
+  "published": true
 }
