@@ -2,8 +2,8 @@
   "title": "Harry Potter - Audiolivro",
   "category": "audiolivros",
   "type": "audio",
-  "audioFile": "/media/audios/sem-titulo1.wav",
-  "cover": "/media/imagens/captura-de-tela-2026-11-01-as-171632-1.png",
+  "audioFile": "/media/audios/trecho-narracao.mp3",
+  "cover": "/media/imagens/harry.jpeg",
   "order": 55,
   "featured": true,
   "published": true
