@@ -1,0 +1,168 @@
+media:
+- name: imagens
+  label: Capas e fotos
+  input: media/imagens
+  output: /media/imagens
+  rename: safe
+  extensions:
+  - png
+  - jpg
+  - jpeg
+  - webp
+- name: audios
+  label: Arquivos de áudio
+  input: media/audios
+  output: /media/audios
+  rename: safe
+  extensions:
+  - mp3
+  - m4a
+  - ogg
+  - wav
+content:
+- name: midias
+  label: 🎬 Portfólio — vídeos e áudios
+  type: collection
+  path: content/midias
+  format: json
+  filename: '{primary}.json'
+  view:
+    fields:
+    - title
+    - category
+    - type
+    - published
+    - order
+    primary: title
+    sort:
+    - order
+    - title
+    default:
+      sort: order
+      order: asc
+  fields:
+  - name: title
+    label: Título que aparece no site
+    type: string
+    required: true
+  - name: category
+    label: Categoria
+    type: select
+    required: true
+    options:
+      values:
+      - name: reel
+        label: Reel em destaque
+      - name: tv
+        label: TV
+      - name: institucional
+        label: Institucional
+      - name: internet
+        label: Internet
+      - name: caricata
+        label: Vozes Caricatas
+      - name: eventos
+        label: Shows e Eventos
+      - name: audiolivros
+        label: Audiolivros
+      - name: outros
+        label: Outros
+  - name: type
+    label: Formato
+    type: select
+    required: true
+    options:
+      values:
+      - name: video
+        label: Vídeo YouTube / MP4
+      - name: audio
+        label: Áudio MP3 / M4A / WAV
+  - name: url
+    label: Link do YouTube ou do arquivo na Internet (HTTPS)
+    type: string
+    required: false
+  - name: audioFile
+    label: Ou selecione um áudio enviado
+    type: file
+    required: false
+    options:
+      media: audios
+      categories:
+      - audio
+  - name: cover
+    label: Capa personalizada (opcional)
+    type: image
+    required: false
+    options:
+      media: imagens
+  - name: description
+    label: Descrição breve (opcional)
+    type: text
+    required: false
+  - name: order
+    label: Ordem (menor número aparece primeiro)
+    type: number
+    required: true
+  - name: featured
+    label: Destaque
+    type: boolean
+    required: false
+  - name: published
+    label: Mostrar no site
+    type: boolean
+    required: true
+- name: treinamentos
+  label: 🎓 Treinamentos e ebooks
+  type: collection
+  path: content/treinamentos
+  format: json
+  filename: '{primary}.json'
+  view:
+    fields:
+    - title
+    - kind
+    - published
+    - order
+    primary: title
+    sort:
+    - order
+    - title
+    default:
+      sort: order
+      order: asc
+  fields:
+  - name: title
+    label: Nome
+    type: string
+    required: true
+  - name: kind
+    label: Tipo de produto
+    type: select
+    options:
+      values:
+      - name: curso
+        label: Curso
+      - name: workshop
+        label: Workshop
+      - name: ebook
+        label: Ebook
+  - name: description
+    label: Descrição de apresentação
+    type: text
+    required: false
+  - name: url
+    label: Link para página de vendas ou inscrição (HTTPS)
+    type: string
+    required: true
+  - name: label
+    label: Texto do botão
+    type: string
+    required: false
+  - name: order
+    label: Ordem
+    type: number
+    required: true
+  - name: published
+    label: Mostrar no site
+    type: boolean
+    required: true
