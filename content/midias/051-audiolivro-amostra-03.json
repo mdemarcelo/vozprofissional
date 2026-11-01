@@ -1,0 +1,12 @@
+{
+  "title": "Amostra de audiolivro 03 — editar título",
+  "category": "audiolivros",
+  "type": "audio",
+  "url": "",
+  "audioFile": "",
+  "cover": "",
+  "description": "Cole aqui o link público da faixa no SoundCloud e ative Mostrar no site.",
+  "order": 52,
+  "featured": false,
+  "published": false
+}
