@@ -83,7 +83,7 @@ function mediaOpen(item){
  $('#modal-title').textContent=item.title||'Ouvir trabalho';$('#modal-external').href=soundcloud?trackURL(item):url;
  let node;
  if(soundcloud)node=soundcloud;
- else if(item.type==='audio' && nativeAudioURL(item)){node=document.createElement('audio');node.src=nativeAudioURL(item);node.controls=true;node.preload='none'}
+ else if(item.type==='audio' && nativeAudioURL(item)){node=document.createElement('audio');node.src=nativeAudioURL(item);node.controls=true;node.preload='metadata'}
  else if(item.type==='audio'){node=element('p','audio-unavailable','Cole o código de incorporação do SoundCloud no Pages CMS para ouvir esta gravação.');}
  else if(id){node=document.createElement('iframe');node.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;node.title=item.title||'Vídeo';node.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';node.allowFullscreen=true;node.referrerPolicy='strict-origin-when-cross-origin'}
  else{node=document.createElement('video');node.src=url;node.controls=true;node.autoplay=true}
@@ -113,9 +113,27 @@ function renderAudio(){
      // O player oficial do SoundCloud preserva a capa, a reprodução e os controles.
      card.append(player);
    }else if(nativeAudioURL(item)){
-     const native=document.createElement('audio');native.controls=true;native.preload='none';native.src=nativeAudioURL(item);
+     // Arquivos enviados pelo Pages CMS: mostramos a capa cadastrada e um player HTML5.
+     // O arquivo vem do campo audioFile, normalizado pelo build para item.url.
+     const block=element('div','audio-native-block');
+     const art=element('div','audio-native-art');
+     const coverURL=picture(item);
+     if(coverURL){
+       const img=document.createElement('img');img.src=coverURL;img.alt='Capa de '+item.title;img.loading='lazy';
+       img.addEventListener('error',()=>{img.remove();art.classList.add('audio-native-art-fallback')});
+       art.append(img);
+     }else{
+       art.classList.add('audio-native-art-fallback');
+     }
+     const native=document.createElement('audio');native.controls=true;native.preload='metadata';native.src=nativeAudioURL(item);
      native.setAttribute('aria-label','Ouvir '+item.title);
-     card.append(native);
+     const trouble=element('p','audio-native-error','Não foi possível carregar a amostra. ');
+     trouble.hidden=true;
+     const direct=element('a','','Abrir arquivo de áudio ↗');direct.href=nativeAudioURL(item);direct.target='_blank';direct.rel='noopener noreferrer';
+     trouble.append(direct);
+     native.addEventListener('error',()=>{trouble.hidden=false;notifyHeight()});
+     block.append(art,native,trouble);
+     card.append(block);
    }else{
      const pending=element('div','audio-gallery-placeholder');
      pending.append(element('span','audio-placeholder-icon','♫'),element('span','','Adicione o código de incorporação do SoundCloud no Pages CMS.'));
