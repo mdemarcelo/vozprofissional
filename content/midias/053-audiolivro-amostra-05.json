@@ -1,12 +1,10 @@
 {
-  "title": "Amostra de audiolivro 05 — editar título",
+  "title": "Audioconto - Eloquencia Singular, de Fernando Sabino",
   "category": "audiolivros",
   "type": "audio",
-  "url": "",
-  "audioFile": "",
-  "cover": "",
+  "url": "https://on.soundcloud.com/lIUFpQrWouL0KrpVHO",
   "description": "Cole aqui o link público da faixa no SoundCloud e ative Mostrar no site.",
   "order": 54,
   "featured": false,
-  "published": false
+  "published": true
 }
