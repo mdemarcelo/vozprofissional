@@ -15,3 +15,28 @@
 .soundcloud-all {display:inline-block;margin:13px 0 0;color:#087481;font-size:.9rem;font-weight:700;text-decoration:underline;text-underline-offset:4px}
 .modal-content:has(.soundcloud-player) {aspect-ratio:auto;min-height:166px;background:#fff8ec}
 .modal-content .soundcloud-player {display:block;width:100%;height:166px;border:0}
+
+/* Galeria SoundCloud — 6 amostras, 3 colunas. Estética editorial delicada. */
+.audiobook-intro{display:grid;grid-template-columns:1.1fr .9fr;gap:9%;align-items:center;margin-bottom:66px}
+.audiobook-intro .split-copy{max-width:600px}
+.audiobook-intro .split-copy p:not(.eyebrow){font-size:1.04rem;max-width:550px}
+.audiobook-art{height:290px;border-radius:28px;overflow:hidden;background:#cde9ec}
+.audiobook-art img{width:100%;height:100%;object-fit:cover;object-position:center}
+.audio-gallery-heading{display:flex;align-items:end;justify-content:space-between;gap:35px;padding-top:12px;border-top:1px solid #dce9e3;margin-bottom:25px}
+.audio-gallery-heading .eyebrow{margin:17px 0 8px;font-size:.7rem}
+.audio-gallery-heading h3{font-size:clamp(1.6rem,2.4vw,2.2rem);line-height:1.2;margin:0}
+.audio-gallery-heading>p{max-width:380px;color:#61767b;font-size:.93rem;line-height:1.5;margin:0 0 4px}
+.audiobook-section .audio-list{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch}
+.audio-gallery-card{min-width:0;background:#fff;border:1px solid #dce7e2;border-radius:18px;padding:17px;box-shadow:0 8px 28px rgba(16,82,85,.035);display:flex;flex-direction:column;gap:10px}
+.audio-gallery-card-head{display:flex;align-items:start;gap:11px;min-height:48px}
+.audio-gallery-number{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:#cd8739;flex:0 0 auto;padding-top:4px}
+.audio-gallery-card h4{font:800 .95rem/1.45 Manrope,sans-serif;letter-spacing:-.025em;margin:0;color:#083e49}
+.audio-gallery-description{font-size:.84rem;line-height:1.52;margin:0;color:#627a7c}
+.audio-gallery-card .soundcloud-player{display:block;border:0;width:100%;height:166px;border-radius:10px;margin-top:auto;background:#f5f7f6}
+.audio-gallery-card>audio{width:100%;margin-top:auto}
+.audio-gallery-placeholder{height:166px;border-radius:10px;border:1px dashed #bdd8d4;background:linear-gradient(150deg,#eef7f1,#fcf8ef);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px;gap:12px;color:#667f7d;font-size:.81rem;line-height:1.5}
+.audio-placeholder-icon{font-size:2.2rem;line-height:1;color:#92bbb5}
+.audio-gallery-pending{background:#fcfdfb}
+.audiobook-footer{margin-top:30px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+@media(max-width:960px){.audiobook-section .audio-list{grid-template-columns:repeat(2,minmax(0,1fr))}.audiobook-intro{gap:5%}}
+@media(max-width:640px){.audiobook-intro{grid-template-columns:1fr;margin-bottom:38px;gap:24px}.audiobook-art{height:225px}.audio-gallery-heading{display:block}.audio-gallery-heading>p{margin-top:12px}.audiobook-section .audio-list{grid-template-columns:1fr}.audiobook-footer{flex-direction:column;align-items:start}.audiobook-footer .button{width:100%}}

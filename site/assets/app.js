@@ -48,26 +48,43 @@ function renderPortfolio(){const all=usableMedia().filter(x=>x.category!=='reel'
 function filterBy(f){if(!['all','tv','institucional','internet','caricata','eventos','audiolivros'].includes(f))return;state.filter=f;state.expanded=false;renderPortfolio()}
 function renderCharacters(){const box=$('#character-list');const entries=usableMedia().filter(i=>i.category==='caricata').slice(0,3);box.replaceChildren(...entries.map(i=>{const btn=element('button','character-line');btn.type='button';btn.append(element('span','',i.type==='audio'?'♫':'▶'),element('span','',i.title),element('small','',''));btn.append(element('small','','OUVIR ↗'));btn.addEventListener('click',()=>mediaOpen(i));return btn}));}
 function renderAudio(){
- const list=$('#audio-list'),audio=usableMedia().filter(i=>i.type==='audio'&&i.category==='audiolivros');
- list.replaceChildren();
- if(!audio.length){
-   const card=element('div','audio-card');
-   card.append(element('strong','','Conheça minhas amostras no SoundCloud'),element('p','audio-description','Enquanto seleciono os trechos para esta página, você pode ouvir as gravações publicadas no meu perfil.'));
-   const profile=soundcloudPlayer('https://soundcloud.com/mdemarcelo','Player do perfil de Marcelo Nascimento no SoundCloud');
-   if(profile)card.append(profile);
-   list.append(card);
- }else{
-   list.append(...audio.map(i=>{
-     const card=element('article','audio-card');card.append(element('strong','',i.title));
-     if(i.description)card.append(element('p','audio-description',i.description));
-     const player=soundcloudPlayer(i.url,i.title)||document.createElement('audio');
-     if(player.tagName==='AUDIO'){player.controls=true;player.preload='none';player.src=validURL(i.url);player.setAttribute('aria-label','Ouvir '+i.title)}
-     card.append(player);return card;
-   }));
+ const list=$('#audio-list');
+ const audio=usableMedia().filter(i=>i.type==='audio' && i.category==='audiolivros');
+ const cards=[];
+ audio.forEach((item,index)=>{
+   const card=element('article','audio-gallery-card');
+   const head=element('div','audio-gallery-card-head');
+   const no=element('span','audio-gallery-number',String(index+1).padStart(2,'0'));
+   const title=element('h4','',item.title);
+   head.append(no,title);
+   card.append(head);
+   if(item.description)card.append(element('p','audio-gallery-description',item.description));
+   const player=soundcloudPlayer(item.url,item.title);
+   if(player){
+     // O player oficial do SoundCloud preserva a capa, a reprodução e os controles.
+     card.append(player);
+   }else{
+     const native=document.createElement('audio');native.controls=true;native.preload='none';native.src=validURL(item.url);
+     native.setAttribute('aria-label','Ouvir '+item.title);
+     card.append(native);
+   }
+   cards.push(card);
+ });
+ // Na versão de testes exibimos seis espaços, sem fingir que as faixas ausentes existem.
+ const filled=cards.length;
+ const slots=Math.max(0,6-filled);
+ for(let n=0;n<slots;n++){
+   const card=element('article','audio-gallery-card audio-gallery-pending');
+   const no=element('span','audio-gallery-number',String(filled+n+1).padStart(2,'0'));
+   const head=element('div','audio-gallery-card-head');
+   head.append(no,element('h4','',`Amostra ${String(filled+n+1).padStart(2,'0')}`));
+   const pending=element('div','audio-gallery-placeholder');
+   pending.append(element('span','audio-placeholder-icon','♫'),element('span','', 'Espaço reservado para uma nova amostra'));
+   card.append(head,pending);
+   cards.push(card);
  }
- const more=element('a','soundcloud-all','Ver meu acervo completo no SoundCloud ↗');
- more.href='https://soundcloud.com/mdemarcelo';more.target='_blank';more.rel='noopener noreferrer';
- list.append(more);
+ list.replaceChildren(...cards);
+ notifyHeight();
 }
 function renderEvents(){const box=$('#event-list');box.replaceChildren(...usableMedia().filter(i=>i.category==='eventos').slice(0,3).map(i=>{const b=actionButton('▶   '+i.title,()=>mediaOpen(i));return b}));}
 function renderTraining(){const box=$('#training-catalog');const product=state.products.filter(x=>x && x.published!==false && x.title && validURL(x.url)).sort((a,b)=>(Number(a.order)||999)-(Number(b.order)||999));box.replaceChildren(...product.map((i,index)=>{const article=element('article','training-card');const glyph=element('div','product-glyph',i.kind==='ebook'?'▤':i.kind==='curso'?'✧':'♫');glyph.setAttribute('aria-hidden','true');const content=element('div');content.append(element('h3','',i.title),element('p','',i.description||''));const link=element('a','',`${i.label||'Conhecer'} ↗`);link.href=validURL(i.url);link.target='_blank';link.rel='noopener noreferrer';content.append(link);article.append(glyph,content);return article}));if(!product.length)box.replaceChildren(element('p','audio-empty','Novos cursos e publicações em breve.'));notifyHeight()}
