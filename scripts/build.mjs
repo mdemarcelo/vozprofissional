@@ -20,10 +20,13 @@ function cleanMedia(entry,i){
  const title=String(entry.title||'').trim();
  const category=String(entry.category||'outros');
  const type=entry.type==='audio'?'audio':'video';
+ // O conteúdo HTML do iframe não é executado; somente um src validado será usado no navegador.
+ const soundcloudEmbed=type==='audio'?String(entry.soundcloudEmbed||'').trim().slice(0,12000):'';
  const url=safeUrl((type==='audio'&&entry.audioFile)||entry.url);
- if(!title||!url){if(entry.published!==false)console.warn(`Aviso: mídia ${i} sem título ou URL válido; será omitida`);return null;}
+ const hasEmbed=/<iframe\b[^>]*?\bsrc\s*=\s*(?:"https:\/\/w\.soundcloud\.com\/player\/|'https:\/\/w\.soundcloud\.com\/player\/)/i.test(soundcloudEmbed) || /^https:\/\/w\.soundcloud\.com\/player\//i.test(soundcloudEmbed);
+ if(!title||(!url&&!hasEmbed)){if(entry.published!==false)console.warn(`Aviso: mídia ${i} sem título ou URL/iframe válido; será omitida`);return null;}
  if(!['reel','tv','institucional','internet','caricata','eventos','audiolivros','outros'].includes(category))throw new Error(`Categoria inválida: ${category}`);
- return {title,category,type,url,cover:safeUrl(entry.cover),description:String(entry.description||''),order:Number(entry.order)||999,featured:!!entry.featured,published:entry.published!==false};
+ return {title,category,type,url,soundcloudEmbed:hasEmbed?soundcloudEmbed:"",cover:safeUrl(entry.cover),description:String(entry.description||''),order:Number(entry.order)||999,featured:!!entry.featured,published:entry.published!==false};
 }
 function cleanProduct(e,i){
  const url=safeUrl(e.url);if(!e.title||!url){if(e.published!==false)console.warn(`Aviso: treinamento ${i} sem URL válido; será omitido`);return null;}
