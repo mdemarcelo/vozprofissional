@@ -157,7 +157,31 @@ function renderAudio(){
  list.replaceChildren(...cards);
  notifyHeight();
 }
-function renderEvents(){const box=$('#event-list');box.replaceChildren(...usableMedia().filter(i=>i.category==='eventos').slice(0,3).map(i=>{const b=actionButton('▶   '+i.title,()=>mediaOpen(i));return b}));}
+function renderEvents(){
+  const box=$('#event-video-grid');if(!box)return;
+  // Mostra 6 players oficiais, independentes, diretamente na home. Somente links reais do YouTube.
+  const videos=usableMedia().filter(i=>i.category==='eventos'&&i.type==='video'&&youtubeId(i.url)).slice(0,6);
+  const cards=videos.map((item,index)=>{
+    const article=element('article','event-video-card');
+    const frameBox=element('div','event-video-frame');
+    const iframe=document.createElement('iframe');
+    iframe.src=`https://www.youtube-nocookie.com/embed/${youtubeId(item.url)}?rel=0&playsinline=1`;
+    iframe.title=`Reproduzir vídeo: ${item.title}`;
+    iframe.loading='lazy';iframe.referrerPolicy='strict-origin-when-cross-origin';
+    iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen=true;
+    frameBox.append(iframe);
+    const info=element('div','event-video-info');
+    info.append(element('strong','',item.title),element('small','',`VÍDEO ${String(index+1).padStart(2,'0')}`));
+    const link=element('a','event-video-link','Abrir no YouTube ↗');
+    link.href=`https://www.youtube.com/watch?v=${youtubeId(item.url)}`;link.target='_blank';link.rel='noopener noreferrer';
+    article.append(frameBox,info,link);return article;
+  });
+  box.replaceChildren(...cards);
+  if(!videos.length)box.append(element('p','audio-empty','Vídeos em atualização. Cadastre trabalhos na categoria Shows e Eventos do Pages CMS.'));
+  const note=$('#event-video-status');if(note)note.textContent=videos.length?`${videos.length} ${videos.length===1?'vídeo disponível':'vídeos disponíveis'} · dê o play no seu preferido.`:'Seleção de vídeos em atualização.';
+  notifyHeight();
+}
 function renderTraining(){const box=$('#training-catalog');const product=state.products.filter(x=>x && x.published!==false && x.title && validURL(x.url)).sort((a,b)=>(Number(a.order)||999)-(Number(b.order)||999));box.replaceChildren(...product.map((i,index)=>{const article=element('article','training-card');const glyph=element('div','product-glyph',i.kind==='ebook'?'▤':i.kind==='curso'?'✧':'♫');glyph.setAttribute('aria-hidden','true');const content=element('div');content.append(element('h3','',i.title),element('p','',i.description||''));const link=element('a','',`${i.label||'Conhecer'} ↗`);link.href=validURL(i.url);link.target='_blank';link.rel='noopener noreferrer';content.append(link);article.append(glyph,content);return article}));if(!product.length)box.replaceChildren(element('p','audio-empty','Novos cursos e publicações em breve.'));notifyHeight()}
 function renderAll(){renderReel();renderPortfolio();renderCharacters();renderAudio();renderEvents();renderTraining()}
 const nav=$('#nav-menu'),menu=$('.menu-button');menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!open));menu.setAttribute('aria-label',open?'Abrir navegação':'Fechar navegação');nav.classList.toggle('open',!open)});document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu?.setAttribute('aria-expanded','false')}));
