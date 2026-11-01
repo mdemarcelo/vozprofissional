@@ -1,12 +1,10 @@
 {
-  "title": "Amostra de audiolivro 03 — editar título",
+  "title": "Ditadua e Serviço Social",
   "category": "audiolivros",
   "type": "audio",
-  "url": "",
-  "audioFile": "",
-  "cover": "",
+  "url": "https://on.soundcloud.com/6ymJnjz7alC1EcGnlR",
   "description": "Cole aqui o link público da faixa no SoundCloud e ative Mostrar no site.",
   "order": 52,
   "featured": false,
-  "published": false
+  "published": true
 }
