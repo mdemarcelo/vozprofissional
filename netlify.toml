@@ -1,0 +1,18 @@
+[build]
+  command = "node scripts/build.mjs"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  SITE_MODE = "staging"  # Trocar para production APENAS no lançamento final, depois de revisar o domínio.
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/media/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
