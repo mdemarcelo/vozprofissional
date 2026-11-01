@@ -11,31 +11,80 @@ function validURL(url){
   try{const u=new URL(value);return u.protocol==='https:'?u.href:''}catch{return ''}
 }
 function youtubeId(url){try{let u=new URL(url);if(['youtu.be','www.youtu.be'].includes(u.hostname))return /^[\w-]{11}$/.test(u.pathname.slice(1))?u.pathname.slice(1):'';if(['youtube.com','www.youtube.com','m.youtube.com','www.youtube-nocookie.com'].includes(u.hostname)){const id=u.searchParams.get('v')||u.pathname.match(/^\/(?:embed|shorts)\/([\w-]{11})/)?.[1];return /^[\w-]{11}$/.test(id||'')?id:''}}catch{}return ''}
+// Aceita o código <iframe> fornecido pelo SoundCloud, o endereço do widget
+// w.soundcloud.com/player/ e os links públicos completos soundcloud.com/autor/faixa.
+// Não introduz HTML do CMS na página: extrai APENAS o src e valida a origem.
 function soundcloudEmbedURL(raw){
-  const url=validURL(raw);if(!url)return '';
+  if(typeof raw!=='string'||!raw.trim())return '';
+  let value=raw.trim();
+  if(/<iframe\b/i.test(value)){
+    const match=value.match(/<iframe\b[^>]*?\bsrc\s*=\s*(?:"([^"]+)"|'([^']+)')/i);
+    if(!match)return '';
+    value=match[1]||match[2];
+  }
+  value=value.replace(/&amp;/gi,'&');
   try{
-    const u=new URL(url);
-    if(!['soundcloud.com','www.soundcloud.com','m.soundcloud.com'].includes(u.hostname)||u.username||u.password||u.port||u.pathname==='/')return '';
-    const track=`https://soundcloud.com${u.pathname}${u.search}`;
-    return 'https://w.soundcloud.com/player/?url='+encodeURIComponent(track)+'&color=%23087c82&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&show_artwork=false';
-  }catch{return ''}
+    const u=new URL(value);
+    if(u.protocol!=='https:'||u.username||u.password||u.port)return '';
+    if(u.hostname==='w.soundcloud.com' && u.pathname==='/player/'){
+      const track=u.searchParams.get('url')||'';
+      const target=new URL(track);
+      if(target.protocol!=='https:'||target.username||target.password||target.port)return '';
+      if(!['api.soundcloud.com','soundcloud.com','www.soundcloud.com'].includes(target.hostname))return '';
+      if(!/^\/(tracks|playlists|users|[\w-]+)(?:\/|$)/.test(target.pathname))return '';
+      u.searchParams.set('auto_play','false');
+      return u.href;
+    }
+    if(['soundcloud.com','www.soundcloud.com','m.soundcloud.com'].includes(u.hostname) && u.pathname!=='/' && u.pathname.split('/').filter(Boolean).length>=2){
+      // Player visual com capa, no padrão do iframe fornecido pelo usuário.
+      const src=new URL('https://w.soundcloud.com/player/');
+      src.searchParams.set('url',`https://soundcloud.com${u.pathname}${u.search}`);
+      src.searchParams.set('visual','true');
+      src.searchParams.set('color','#ff5500');
+      src.searchParams.set('auto_play','false');
+      src.searchParams.set('show_user','true');
+      src.searchParams.set('show_comments','false');
+      return src.href;
+    }
+  }catch{}
+  return '';
 }
-function soundcloudPlayer(raw,title){
-  const src=soundcloudEmbedURL(raw);if(!src)return null;
+function trackURL(item){
+  const url=validURL(item.url);
+  if(url && !url.includes('w.soundcloud.com/player'))return url;
+  const embedded=soundcloudEmbedURL(item.soundcloudEmbed||item.url||'');
+  if(embedded){try{
+    const track=new URL(embedded).searchParams.get('url');
+    const direct=validURL(track);
+    if(direct && new URL(direct).hostname.endsWith('soundcloud.com'))return direct;
+  }catch{}}
+  return 'https://soundcloud.com/mdemarcelo';
+}
+function soundcloudPlayer(item,title){
+  const src=soundcloudEmbedURL(item.soundcloudEmbed||'')||soundcloudEmbedURL(item.url||'');
+  if(!src)return null;
   const frame=document.createElement('iframe');frame.className='soundcloud-player';frame.src=src;
-  frame.title=title||'Ouvir no SoundCloud';frame.loading='lazy';frame.setAttribute('allow','autoplay');
+  frame.title=title||'Ouvir no SoundCloud';frame.loading='lazy';frame.setAttribute('allow','autoplay; encrypted-media');
   frame.referrerPolicy='strict-origin-when-cross-origin';frame.setAttribute('scrolling','no');return frame;
+}
+function nativeAudioURL(item){
+  const raw=validURL(item.url);
+  if(!raw)return '';
+  if(raw.startsWith('/media/')||/\.(mp3|m4a|wav|ogg|aac)(?:[?#]|$)/i.test(raw))return raw;
+  return '';
 }
 function element(tag,cl,txt){let n=document.createElement(tag);if(cl)n.className=cl;if(txt!=null)n.textContent=String(txt);return n}
 function actionButton(title,callback){const b=element('button','',title);b.type='button';b.addEventListener('click',callback);return b}
-function usableMedia(){return state.media.filter(i=>i && i.published!==false && i.title && validURL(i.url) && ['video','audio'].includes(i.type) && (i.type!=='video'||youtubeId(i.url)||/\.(mp4|webm)(\?|$)/i.test(i.url))).sort((a,b)=>(Number(a.order)||999)-(Number(b.order)||999))}
+function usableMedia(){return state.media.filter(i=>i && i.published!==false && i.title && ['video','audio'].includes(i.type) && (i.type==='audio' ? (soundcloudEmbedURL(i.soundcloudEmbed||'')||soundcloudEmbedURL(i.url||'')||validURL(i.url)) : (validURL(i.url)&&(youtubeId(i.url)||/\.(mp4|webm)(\?|$)/i.test(i.url))))).sort((a,b)=>(Number(a.order)||999)-(Number(b.order)||999))}
 function mediaOpen(item){
- const url=validURL(item.url),id=youtubeId(url);if(!url)return;
+ const url=validURL(item.url),id=youtubeId(url),soundcloud=item.type==='audio'?soundcloudPlayer(item,item.title):null;
+ if(!url&&!soundcloud)return;
  const modal=$('#media-modal'),body=$('#modal-content');state.opener=document.activeElement;body.replaceChildren();
- $('#modal-title').textContent=item.title||'Ouvir trabalho';$('#modal-external').href=url;
+ $('#modal-title').textContent=item.title||'Ouvir trabalho';$('#modal-external').href=soundcloud?trackURL(item):url;
  let node;
- if(item.type==='audio'&&soundcloudEmbedURL(url))node=soundcloudPlayer(url,item.title);
- else if(item.type==='audio'){node=document.createElement('audio');node.src=url;node.controls=true;node.preload='none'}
+ if(soundcloud)node=soundcloud;
+ else if(item.type==='audio' && nativeAudioURL(item)){node=document.createElement('audio');node.src=nativeAudioURL(item);node.controls=true;node.preload='none'}
+ else if(item.type==='audio'){node=element('p','audio-unavailable','Cole o código de incorporação do SoundCloud no Pages CMS para ouvir esta gravação.');}
  else if(id){node=document.createElement('iframe');node.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;node.title=item.title||'Vídeo';node.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';node.allowFullscreen=true;node.referrerPolicy='strict-origin-when-cross-origin'}
  else{node=document.createElement('video');node.src=url;node.controls=true;node.autoplay=true}
  body.append(node);modal.setAttribute('aria-hidden','false');document.body.classList.add('has-modal');$('.close-modal').focus();notifyHeight();
@@ -59,14 +108,18 @@ function renderAudio(){
    head.append(no,title);
    card.append(head);
    if(item.description)card.append(element('p','audio-gallery-description',item.description));
-   const player=soundcloudPlayer(item.url,item.title);
+   const player=soundcloudPlayer(item,item.title);
    if(player){
      // O player oficial do SoundCloud preserva a capa, a reprodução e os controles.
      card.append(player);
-   }else{
-     const native=document.createElement('audio');native.controls=true;native.preload='none';native.src=validURL(item.url);
+   }else if(nativeAudioURL(item)){
+     const native=document.createElement('audio');native.controls=true;native.preload='none';native.src=nativeAudioURL(item);
      native.setAttribute('aria-label','Ouvir '+item.title);
      card.append(native);
+   }else{
+     const pending=element('div','audio-gallery-placeholder');
+     pending.append(element('span','audio-placeholder-icon','♫'),element('span','','Adicione o código de incorporação do SoundCloud no Pages CMS.'));
+     card.append(pending);
    }
    cards.push(card);
  });

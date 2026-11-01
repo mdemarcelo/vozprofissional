@@ -40,3 +40,9 @@
 .audiobook-footer{margin-top:30px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
 @media(max-width:960px){.audiobook-section .audio-list{grid-template-columns:repeat(2,minmax(0,1fr))}.audiobook-intro{gap:5%}}
 @media(max-width:640px){.audiobook-intro{grid-template-columns:1fr;margin-bottom:38px;gap:24px}.audiobook-art{height:225px}.audio-gallery-heading{display:block}.audio-gallery-heading>p{margin-top:12px}.audiobook-section .audio-list{grid-template-columns:1fr}.audiobook-footer{flex-direction:column;align-items:start}.audiobook-footer .button{width:100%}}
+
+/* Player visual oficial SoundCloud (o usuário escolhe o formato 300 px no SoundCloud). */
+.audio-gallery-card .soundcloud-player{height:300px;min-height:300px;flex:0 0 auto}
+.modal-content:has(.soundcloud-player){min-height:300px}
+.modal-content .soundcloud-player{height:300px}
+.audio-gallery-card .audio-gallery-placeholder{min-height:140px}
