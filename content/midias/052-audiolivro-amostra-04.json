@@ -1,12 +1,10 @@
 {
-  "title": "Amostra de audiolivro 04 — editar título",
+  "title": "Revista Exame - Versão em Áudio (Ubook)",
   "category": "audiolivros",
   "type": "audio",
-  "url": "",
-  "audioFile": "",
-  "cover": "",
+  "url": "https://on.soundcloud.com/V3DwAWHv8U9Jg6DIR7",
   "description": "Cole aqui o link público da faixa no SoundCloud e ative Mostrar no site.",
   "order": 53,
   "featured": false,
-  "published": false
+  "published": true
 }
