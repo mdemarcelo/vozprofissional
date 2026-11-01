@@ -4,8 +4,8 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  SITE_MODE = "staging"  # Trocar para production APENAS no lançamento final, depois de revisar o domínio.
-
+  SITE_MODE = "production"  
+  
 [[headers]]
   for = "/assets/*"
   [headers.values]
