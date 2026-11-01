@@ -46,3 +46,13 @@
 .modal-content:has(.soundcloud-player){min-height:300px}
 .modal-content .soundcloud-player{height:300px}
 .audio-gallery-card .audio-gallery-placeholder{min-height:140px}
+
+/* Amostras enviadas pelo Pages CMS (MP3/M4A/WAV): capa + controle nativo. */
+.audio-gallery-card .audio-native-block{display:flex;flex-direction:column;gap:12px;margin-top:auto;min-width:0}
+.audio-gallery-card .audio-native-art{height:234px;min-height:234px;width:100%;border-radius:11px;overflow:hidden;background:linear-gradient(145deg,#f3f8f4,#fff6ea);display:flex;align-items:center;justify-content:center}
+.audio-gallery-card .audio-native-art img{display:block;width:100%;height:100%;object-fit:contain}
+.audio-gallery-card .audio-native-art-fallback::after{content:'♫';font-size:3rem;color:#91bcb7}
+.audio-gallery-card .audio-native-block audio{display:block;width:100%;height:54px;flex:none}
+.audio-gallery-card .audio-native-error{font-size:.8rem;color:#a54532;line-height:1.5;margin:0}
+.audio-gallery-card .audio-native-error[hidden]{display:none}
+.audio-gallery-card .audio-native-error a{font-weight:700;color:inherit;text-decoration:underline}
