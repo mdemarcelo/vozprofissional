@@ -82,3 +82,9 @@
 .event-footer-links .button{min-height:46px;padding:11px 20px;font-size:.85rem}
 @media (max-width:1020px){.event-video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.event-intro{gap:5%}}
 @media (max-width:680px){.event-intro{grid-template-columns:1fr;gap:21px}.event-video-grid{grid-template-columns:1fr;gap:16px}.event-footer{align-items:flex-start}.event-footer-links{flex-direction:column;align-items:flex-start;gap:16px}.event-video-info{margin-top:12px}}
+
+/* Navegação interna para páginas de serviços e SEO */
+.service-detail-link{margin:18px 0 0;font-size:.85rem}
+.footer-services{display:flex;align-items:center;gap:12px 22px;flex-wrap:wrap;margin-top:26px;padding-top:20px;border-top:1px solid rgba(255,255,255,.22)}
+.footer-services span{font-size:.78rem;font-weight:700;color:#b8d2d3}
+.footer-services a{color:#f3f9f5;text-decoration:underline;text-underline-offset:3px;font-size:.82rem}
