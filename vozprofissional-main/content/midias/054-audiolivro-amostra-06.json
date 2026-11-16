@@ -1,0 +1,11 @@
+{
+  "title": "Harry Potter - Audiolivro",
+  "category": "audiolivros",
+  "type": "audio",
+  "audioFile": "/media/audios/trecho-narracao.mp3",
+  "cover": "/media/imagens/captura-de-tela-2026-11-01-as-171632-1.png",
+  "description": "Amostra de narração de Harry Potter.",
+  "order": 55,
+  "featured": true,
+  "published": true
+}

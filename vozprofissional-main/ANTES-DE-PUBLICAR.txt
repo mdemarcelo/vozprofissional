@@ -1,0 +1,12 @@
+VOZ PROFISSIONAL — ORDEM CERTA DE CONFIGURAÇÃO
+
+1. Para visualizar rapidamente: use o ZIP “publicar agora” em https://app.netlify.com/drop/ (DESCOMPACTE antes e arraste a pasta).
+2. Para criar o painel que edita vídeos e áudio: suba o ZIP “código editável” ao GitHub via GitHub Desktop (repositório privado).
+3. Importe ESSE repositório no Netlify (a partir daí, atualizações automáticas).
+4. Entre em https://app.pagescms.org/ usando GitHub e autorize apenas o repositório do site.
+5. Edite suas mídias no Pages CMS; cada salvamento gera um deploy no Netlify.
+6. Não mexa nos registros DNS do Wix agora. Veja o guia antes de migrar o domínio principal.
+
+O Pages CMS NÃO está configurado online até que você faça o login e conecte GitHub/Netlify. A prévia do ZIP pronta para Drop funciona, mas não é editável por painel sem esse passo.
+
+Abra GUIA-PASSO-A-PASSO.html para as instruções detalhadas.
